@@ -45,6 +45,6 @@
 
 ## Step 7: Comparing different languages
 Για τη σύγκριση των διαφορετικών γλωσσών στα 3 πειράματα που αναφέραμε προηγουμένως, δημιουργήθηκε ένα μικρό python script που είναι μαζεμένα όλα τα αποτελέσματα και συνοψίζονται σε bar chart. Το αρχείο έχει όνομα comparing_languages.py. Τα αποτελέσματα φαίνονται στην εικόνα που ακολουθεί:
-![Comparing different languages](./images/diff languages.png)
+![Comparing different languages](./images/diff_languages.png)
 
 
