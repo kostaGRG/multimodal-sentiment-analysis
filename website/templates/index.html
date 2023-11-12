@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Twitter Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+
+<body>
+    <section class="hero is-link is-normal">
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div id="navbar" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item white-color" href="/">New Post</a>
+                            <a class="navbar-item white-color" href="#">API Docs</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="hero-body">
+            <div class="content has-text-centered">
+                <p class="title is-2 white-color">Multimodal Sentiment Analysis</p>
+                <p class="subtitle is-4 white-color">Predict sentiment of posts containing text and image</p>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <form method="POST" enctype="multipart/form-data" id="upload-form">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Text Input</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="text" name="text_input" placeholder="Enter text">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Upload Image</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control" id="image-drop-area">
+                                <div class="drop-area-text">
+                                    <div class="upload-area" ondragover="dragOver(event)" ondrop="drop(event)">
+                                        <input type="file" name="image_input" id="uploadFile" />
+                                        <p>Drag and drop image here or click to upload</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-body">
+                        <button class="button is-info" type="submit" id="submit-button"
+                            style="margin: auto;">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+
+</html>

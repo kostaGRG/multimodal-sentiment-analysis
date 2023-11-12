@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Result Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+    <section class="hero is-link is-normal">
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div id="navbar" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item white-color" href="/">New Post</a>
+                            <a class="navbar-item white-color" href="#">API Docs</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="hero-body">
+            <div class="content has-text-centered">
+                <p class="title is-2 white-color">Multimodal Sentiment Analysis</p>
+                <p class="subtitle is-4 white-color">Predict sentiment of posts containing text and image</p>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <div class="columns">
+                    <div class="column is-two-fifths">
+                        {% if text is not none %}
+                        <div class="content">
+                            <h2><strong>Text:</strong></h2>
+                            <p>{{ text }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if image is not none %}
+                        <div class="content">
+                            <h2><strong>Image:</strong></h2>
+                            <figure class="image is-square">
+                                <img src="{{ image }}" alt="Uploaded Image" style="height: 30vh; width: 25vh; max-width: 600px; max-height: 600px;">
+                            </figure>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                <div class="column is-two-fifths">
+                    <div class="content">
+                        <h2 class="subtitle">Predictions:</h2>
+                        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">Text Prediction</th>
+                                    <th style="text-align: center;">Image Prediction</th>
+                                    <th style="text-align: center;">Final Prediction</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell has-text-white" style="text-align: center;">{{
+                                        text_prediction }}</td>
+                                    <td class="cell has-text-white" style="text-align: center;">{{
+                                        image_prediction }}</td>
+                                    <td class="cell has-text-white" style="text-align: center;">{{
+                                        final_prediction }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <div class="content">
+                    <!-- Display the text -->
+                    <h2><strong>Probabilities:</strong></h2>
+                    <div class="columns">
+                        <div class="column auto">
+                            <canvas id="textPie" style="height: 20vh; width: 20vh;"></canvas>
+                        </div>
+                        <div class="column auto">
+                            <canvas id="imagePie" style="height: 20vh; width: 20vh;"></canvas>
+                        </div>
+                        <div class="column auto">
+                            <canvas id="finalPie" style="height: 20vh; width: 20vh;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script>
+        var valueCells = document.querySelectorAll('.cell');
+        valueCells.forEach(function (cell) {
+            var value = cell.textContent;
+            console.log(value);
+
+            if (value === 'Negative') {
+                cell.setAttribute('class', 'cell has-text-white has-background-danger')
+            } else if (value === 'Neutral') {
+                cell.setAttribute('class', 'cell has-text-white has-background-warning')
+            } else if (value === 'Positive') {
+                cell.setAttribute('class', 'cell has-text-white has-background-success')
+            }
+            else {
+                cell.setAttribute('class', 'cell has-text-white has-background-grey')
+            }
+        });
+
+        var probs = '{{ probs|safe }}';
+        console.log(probs.data);
+        probs = JSON.parse(probs);
+        console.log(probs);
+        console.log(probs['image']);
+
+
+        var ctx = document.getElementById('textPie');
+        if(probs["text"].length == 0){
+            ctx.setAttribute('hidden','hidden');
+        }
+        else{
+            var data = {
+            labels: ['Negative', 'Neutral', 'Positive'],
+            datasets: [{
+                data: probs["text"],
+                backgroundColor: ['#ff3860', '#ffdd57', '#48c774']
+            }]
+            };
+            var textPie = new Chart(ctx, {
+                type: 'pie',
+                data: data,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Text'
+                        }
+                    }
+                }
+
+            });
+        }
+
+
+        var ctx = document.getElementById('imagePie');
+        if(probs["image"].length == 0){
+            ctx.setAttribute('hidden','hidden');
+            console.log('here mate');
+        }
+        else{
+        var data = {
+            labels: ['Negative', 'Neutral', 'Positive'],
+            datasets: [{
+                data: probs["image"],
+                backgroundColor: ['#ff3860', '#ffdd57', '#48c774']
+            }]
+        };
+        var imagePie = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Image'
+                    }
+                }
+            }
+        });
+    }
+
+        var ctx = document.getElementById('finalPie');
+        if(probs["final"].length == 0){
+            ctx.setAttribute('hidden','hidden');
+        }
+        else{
+
+        
+        var data = {
+            labels: ['Negative', 'Neutral', 'Positive'],
+            datasets: [{
+                data: probs["final"],
+                backgroundColor: ['#ff3860', '#ffdd57', '#48c774']
+            }]
+        };
+        var finalPie = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Final'
+                    }
+                }
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>
